@@ -1,0 +1,68 @@
+
+@baseUrl = http://localhost:8000/api/v1
+@token = YOUR_ACCESS_TOKEN
+
+### 1. Register
+POST {{baseUrl}}/auth/register
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "Password@123",
+    "password_confirmation": "Password@123"
+}
+
+###
+
+### 2. Login
+POST {{baseUrl}}/auth/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "john@example.com",
+    "password": "Password@123"
+}
+
+###
+
+### 3. Get Current User
+GET {{baseUrl}}/auth/me
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+
+### 4. Logout
+POST {{baseUrl}}/auth/logout
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+
+### 5. Forgot Password
+POST {{baseUrl}}/auth/forgot-password
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "john@example.com"
+}
+
+###
+
+### 6. Reset Password
+POST {{baseUrl}}/auth/reset-password
+Accept: application/json
+Content-Type: application/json
+
+{
+    "token": "RESET_TOKEN",
+    "email": "john@example.com",
+    "password": "NewPassword@123",
+    "password_confirmation": "NewPassword@123"
+}
+
+###
