@@ -1,9 +1,11 @@
 <?php
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response as StatusCode;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -19,4 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+        $exceptions->render(function (AuthenticationException $exception, Request $request) {
+            throwIf($request->is('api/*'), 'Vui lòng đăng nhập để tiếp tục.', StatusCode::HTTP_UNAUTHORIZED);
+        });
     })->create();
