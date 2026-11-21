@@ -102,18 +102,9 @@ MD,
 
         'fabric' => [
             'view' => 'scramble::fabric',
-
-            // Hiển thị danh sách schemas
             'showSchemas' => true,
-
-            // Hiển thị trang tổng quan
             'overview' => true,
-
-            // Hiển thị nhãn Reference
             'referenceLabel' => true,
-
-            // Logo của ứng dụng
-            'logo' => '',
         ],
     ],
 

@@ -166,6 +166,7 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/laravel-lang/publisher" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/laravel-lang/routes" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/laravel-lang/starter-kits" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/_laravel_idea" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

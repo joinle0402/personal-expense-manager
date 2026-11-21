@@ -19,4 +19,13 @@ class StoreAccountTypeRequest extends FormRequest
             'active' => 'sometimes|boolean',
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'code' => 'mã loại tài khoản',
+            'name' => 'tên loại tài khoản',
+            'active' => 'trạng thái',
+        ];
+    }
 }
