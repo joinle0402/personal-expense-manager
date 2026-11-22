@@ -1,6 +1,6 @@
 import { joinpath } from '@/shared/utils/api-path.ts';
 import { http } from '@/lib/axios.ts';
-import type { AuthResponse, LoginRequest } from '@/features/auth/type/auth.type.ts';
+import type { AuthResponse, LoginRequest } from '@/features/auth/types/auth.type.ts';
 
 const rootPath = 'auth';
 
