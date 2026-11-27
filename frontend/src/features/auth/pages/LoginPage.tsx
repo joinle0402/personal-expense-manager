@@ -10,17 +10,43 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+import { useLogin } from '@/features/auth/hooks/useLogin.ts';
+import { useState } from 'react';
+import { isAxiosError } from 'axios';
+import type { ValidationError } from '@/shared/types/api.ts';
+import Alert from '@mui/material/Alert';
 
 export default function LoginPage() {
-    const { control, handleSubmit, formState } = useForm<LoginFormValues>({
+    const [message, setMessage] = useState<string>('');
+    const { control, handleSubmit, setError, formState } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
         defaultValues: { email: '', password: '' },
     });
     const { isSubmitting } = formState;
+    const loginMutation = useLogin();
 
-    const onSubmit = async (values: LoginFormValues) => {
-        console.log(values);
+    const onSubmit = async (formValues: LoginFormValues) => {
+        try {
+            setMessage('');
+            await loginMutation.mutateAsync(formValues);
+            setMessage('Đăng nhập thành công!');
+        } catch (error: unknown) {
+            if (isAxiosError<ValidationError>(error)) {
+                if (error.response?.status === 422) {
+                    const validationErrors = error.response.data.errors;
+                    Object.entries(validationErrors).forEach(([field, messages]) => {
+                        setError(field as keyof LoginFormValues, {
+                            type: 'server',
+                            message: messages[0],
+                        });
+                    });
+                }
+
+                setMessage(error.response?.data.message || 'Email hoặc mật khẩu không chính xác.');
+            }
+        }
     };
+    const loading = loginMutation.isPending || isSubmitting;
 
     return (
         <Box
@@ -33,6 +59,12 @@ export default function LoginPage() {
             }}
         >
             <Paper elevation={3} sx={{ width: '100%', maxWidth: 420, p: 4 }}>
+                {message && (
+                    <Alert severity={loginMutation.isSuccess ? 'success' : 'error'} onClose={() => setMessage('')}>
+                        {message}
+                    </Alert>
+                )}
+
                 <Typography variant="h5" component="h1" align="center" gutterBottom sx={{ fontWeight: 600 }}>
                     Đăng nhập
                 </Typography>
@@ -40,7 +72,7 @@ export default function LoginPage() {
                 <Stack component="form" spacing={2} noValidate onSubmit={handleSubmit(onSubmit)}>
                     <InputField control={control} name="email" label="Email" type="email" autoComplete="email" autoFocus fullWidth />
                     <PasswordField control={control} name="password" label="Mật khẩu" autoComplete="current-password" fullWidth />
-                    <Button type="submit" variant="contained" size="medium" loading={isSubmitting} fullWidth>
+                    <Button type="submit" variant="contained" size="medium" loading={loading} fullWidth>
                         Đăng nhập
                     </Button>
                 </Stack>
