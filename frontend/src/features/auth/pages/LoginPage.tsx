@@ -11,13 +11,11 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import { useLogin } from '@/features/auth/hooks/useLogin.ts';
-import { useState } from 'react';
 import { isAxiosError } from 'axios';
 import type { ValidationError } from '@/shared/types/api.ts';
-import Alert from '@mui/material/Alert';
+import { notify } from '@/features/notification';
 
 export default function LoginPage() {
-    const [message, setMessage] = useState<string>('');
     const { control, handleSubmit, setError, formState } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
         defaultValues: { email: '', password: '' },
@@ -27,9 +25,8 @@ export default function LoginPage() {
 
     const onSubmit = async (formValues: LoginFormValues) => {
         try {
-            setMessage('');
             await loginMutation.mutateAsync(formValues);
-            setMessage('Đăng nhập thành công!');
+            notify.success('Đăng nhập thành công!');
         } catch (error: unknown) {
             if (isAxiosError<ValidationError>(error)) {
                 if (error.response?.status === 422) {
@@ -41,8 +38,7 @@ export default function LoginPage() {
                         });
                     });
                 }
-
-                setMessage(error.response?.data.message || 'Email hoặc mật khẩu không chính xác.');
+                notify.error(error.response?.data.message || 'Email hoặc mật khẩu không chính xác.');
             }
         }
     };
@@ -59,12 +55,6 @@ export default function LoginPage() {
             }}
         >
             <Paper elevation={3} sx={{ width: '100%', maxWidth: 420, p: 4 }}>
-                {message && (
-                    <Alert severity={loginMutation.isSuccess ? 'success' : 'error'} onClose={() => setMessage('')}>
-                        {message}
-                    </Alert>
-                )}
-
                 <Typography variant="h5" component="h1" align="center" gutterBottom sx={{ fontWeight: 600 }}>
                     Đăng nhập
                 </Typography>

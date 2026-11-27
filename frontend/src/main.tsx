@@ -7,6 +7,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { NotificationContainer } from '@/features/notification';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
         <QueryClientProvider client={queryClient}>
             <CssBaseline />
             <App />
+            <NotificationContainer />
         </QueryClientProvider>
     </StrictMode>,
 );
